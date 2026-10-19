@@ -225,6 +225,486 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Send shift down in 3 s'**
   String get sendShiftDown;
+
+  /// No description provided for @menuMapping.
+  ///
+  /// In en, this message translates to:
+  /// **'Button mapping'**
+  String get menuMapping;
+
+  /// No description provided for @menuTroubleshooting.
+  ///
+  /// In en, this message translates to:
+  /// **'Troubleshooting'**
+  String get menuTroubleshooting;
+
+  /// No description provided for @menuSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Run setup again'**
+  String get menuSetup;
+
+  /// No description provided for @menuDiagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagnostics'**
+  String get menuDiagnostics;
+
+  /// No description provided for @podConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get podConnected;
+
+  /// No description provided for @podSearching.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching…'**
+  String get podSearching;
+
+  /// No description provided for @podBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Used by another app'**
+  String get podBusy;
+
+  /// No description provided for @podBusyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Close Zwift and Zwift Companion, then wait a few seconds.'**
+  String get podBusyHint;
+
+  /// No description provided for @podLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get podLocked;
+
+  /// No description provided for @podLockedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The left controller may stop. The right controller covers shifting.'**
+  String get podLockedHint;
+
+  /// No description provided for @podProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Problem — retrying'**
+  String get podProblem;
+
+  /// No description provided for @podSearchingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Press a button on the controller to wake it up.'**
+  String get podSearchingHint;
+
+  /// No description provided for @podNotUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not used in right-only mode'**
+  String get podNotUsed;
+
+  /// No description provided for @battery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery {percent}%'**
+  String battery(int percent);
+
+  /// No description provided for @routeObc.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to MyWhoosh (OpenBikeControl)'**
+  String get routeObc;
+
+  /// No description provided for @routeObcHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Shifts go straight to MyWhoosh.'**
+  String get routeObcHint;
+
+  /// No description provided for @routeKeyboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard mode'**
+  String get routeKeyboard;
+
+  /// No description provided for @routeKeyboardHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Shifting works while MyWhoosh is open. For a better link, in MyWhoosh open Connection, choose OpenBikeControl, pick ShiftPad and press Yes.'**
+  String get routeKeyboardHint;
+
+  /// No description provided for @routeNone.
+  ///
+  /// In en, this message translates to:
+  /// **'MyWhoosh not found'**
+  String get routeNone;
+
+  /// No description provided for @routeNoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Start MyWhoosh on this PC.'**
+  String get routeNoneHint;
+
+  /// No description provided for @fallbackBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Left controller locked — using right-only buttons'**
+  String get fallbackBanner;
+
+  /// No description provided for @lastPressed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last: {action} · {ms} ms'**
+  String lastPressed(String action, int ms);
+
+  /// No description provided for @nothingPressedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Press a button to try it.'**
+  String get nothingPressedYet;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @finish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get finish;
+
+  /// No description provided for @wizardWakeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake your controllers'**
+  String get wizardWakeTitle;
+
+  /// No description provided for @wizardWakeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Close Zwift and Zwift Companion. Then press any button on each Click controller.'**
+  String get wizardWakeBody;
+
+  /// No description provided for @wizardModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how you ride'**
+  String get wizardModeTitle;
+
+  /// No description provided for @wizardModeRightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Right controller only'**
+  String get wizardModeRightTitle;
+
+  /// No description provided for @wizardModeRightBody.
+  ///
+  /// In en, this message translates to:
+  /// **'+ shifts up, B shifts down. Simple and always works.'**
+  String get wizardModeRightBody;
+
+  /// No description provided for @wizardModeBothTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Both controllers'**
+  String get wizardModeBothTitle;
+
+  /// No description provided for @wizardModeBothBody.
+  ///
+  /// In en, this message translates to:
+  /// **'+ shifts up, − shifts down, arrows steer. If the left controller stops answering, ShiftPad switches to right-only buttons by itself.'**
+  String get wizardModeBothBody;
+
+  /// No description provided for @wizardConnectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect MyWhoosh'**
+  String get wizardConnectTitle;
+
+  /// No description provided for @wizardConnectStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Open MyWhoosh on this PC.'**
+  String get wizardConnectStep1;
+
+  /// No description provided for @wizardConnectStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the Connection screen.'**
+  String get wizardConnectStep2;
+
+  /// No description provided for @wizardConnectStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose OpenBikeControl, pick ShiftPad, and press Yes.'**
+  String get wizardConnectStep3;
+
+  /// No description provided for @wizardConnectNote.
+  ///
+  /// In en, this message translates to:
+  /// **'If you skip this, ShiftPad uses keyboard mode.'**
+  String get wizardConnectNote;
+
+  /// No description provided for @wizardTestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Press + to test'**
+  String get wizardTestTitle;
+
+  /// No description provided for @wizardTestBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Press + on the right controller. Your gear in MyWhoosh should go up.'**
+  String get wizardTestBody;
+
+  /// No description provided for @wizardTestWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for +…'**
+  String get wizardTestWaiting;
+
+  /// No description provided for @wizardTestOk.
+  ///
+  /// In en, this message translates to:
+  /// **'It works!'**
+  String get wizardTestOk;
+
+  /// No description provided for @mappingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Button mapping'**
+  String get mappingTitle;
+
+  /// No description provided for @mappingMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode'**
+  String get mappingMode;
+
+  /// No description provided for @modeRightOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Right only'**
+  String get modeRightOnly;
+
+  /// No description provided for @modeBothPods.
+  ///
+  /// In en, this message translates to:
+  /// **'Both controllers'**
+  String get modeBothPods;
+
+  /// No description provided for @mappingReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to defaults'**
+  String get mappingReset;
+
+  /// No description provided for @mappingChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an action for {button}'**
+  String mappingChoose(String button);
+
+  /// No description provided for @buttonLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'← Left'**
+  String get buttonLeft;
+
+  /// No description provided for @buttonUp.
+  ///
+  /// In en, this message translates to:
+  /// **'↑ Up'**
+  String get buttonUp;
+
+  /// No description provided for @buttonRight.
+  ///
+  /// In en, this message translates to:
+  /// **'→ Right'**
+  String get buttonRight;
+
+  /// No description provided for @buttonDown.
+  ///
+  /// In en, this message translates to:
+  /// **'↓ Down'**
+  String get buttonDown;
+
+  /// No description provided for @buttonMinus.
+  ///
+  /// In en, this message translates to:
+  /// **'−'**
+  String get buttonMinus;
+
+  /// No description provided for @buttonA.
+  ///
+  /// In en, this message translates to:
+  /// **'A'**
+  String get buttonA;
+
+  /// No description provided for @buttonB.
+  ///
+  /// In en, this message translates to:
+  /// **'B'**
+  String get buttonB;
+
+  /// No description provided for @buttonY.
+  ///
+  /// In en, this message translates to:
+  /// **'Y'**
+  String get buttonY;
+
+  /// No description provided for @buttonZ.
+  ///
+  /// In en, this message translates to:
+  /// **'Z'**
+  String get buttonZ;
+
+  /// No description provided for @buttonPlus.
+  ///
+  /// In en, this message translates to:
+  /// **'+'**
+  String get buttonPlus;
+
+  /// No description provided for @actionNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing'**
+  String get actionNone;
+
+  /// No description provided for @actionShiftUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift up'**
+  String get actionShiftUp;
+
+  /// No description provided for @actionShiftDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift down'**
+  String get actionShiftDown;
+
+  /// No description provided for @actionSteerLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Steer left'**
+  String get actionSteerLeft;
+
+  /// No description provided for @actionSteerRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Steer right'**
+  String get actionSteerRight;
+
+  /// No description provided for @actionToggleUi.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide or show the interface'**
+  String get actionToggleUi;
+
+  /// No description provided for @actionEmote1.
+  ///
+  /// In en, this message translates to:
+  /// **'Emote 1'**
+  String get actionEmote1;
+
+  /// No description provided for @actionEmote2.
+  ///
+  /// In en, this message translates to:
+  /// **'Emote 2'**
+  String get actionEmote2;
+
+  /// No description provided for @actionEmote3.
+  ///
+  /// In en, this message translates to:
+  /// **'Emote 3'**
+  String get actionEmote3;
+
+  /// No description provided for @actionEmote4.
+  ///
+  /// In en, this message translates to:
+  /// **'Emote 4'**
+  String get actionEmote4;
+
+  /// No description provided for @troubleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Troubleshooting'**
+  String get troubleTitle;
+
+  /// No description provided for @troubleBusyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A controller says \"Used by another app\"'**
+  String get troubleBusyTitle;
+
+  /// No description provided for @troubleBusyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A Click controller talks to one app at a time. Close Zwift and Zwift Companion (also on your phone). ShiftPad tries again every 5 seconds.'**
+  String get troubleBusyBody;
+
+  /// No description provided for @troubleLockedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The left controller is locked or stopped'**
+  String get troubleLockedTitle;
+
+  /// No description provided for @troubleLockedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ShiftPad switches to right-only buttons by itself: + shifts up, B shifts down. When the left controller answers again, its buttons come back.'**
+  String get troubleLockedBody;
+
+  /// No description provided for @troubleObcTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'MyWhoosh does not show ShiftPad'**
+  String get troubleObcTitle;
+
+  /// No description provided for @troubleObcBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep ShiftPad open. In MyWhoosh open Connection and choose OpenBikeControl. If Windows asks about the firewall, press Allow. MyWhoosh and ShiftPad must be on the same PC or the same network. After ShiftPad restarts, connect again in MyWhoosh.'**
+  String get troubleObcBody;
+
+  /// No description provided for @troubleKeyboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard mode does not shift'**
+  String get troubleKeyboardTitle;
+
+  /// No description provided for @troubleKeyboardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard mode needs the MyWhoosh window open (not minimised). ShiftPad brings it to the front when you press a button.'**
+  String get troubleKeyboardBody;
+
+  /// No description provided for @troubleLogsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Still stuck?'**
+  String get troubleLogsTitle;
+
+  /// No description provided for @troubleLogsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Diagnostics from the menu and press Export logs, then send the file.'**
+  String get troubleLogsBody;
 }
 
 class _AppLocalizationsDelegate

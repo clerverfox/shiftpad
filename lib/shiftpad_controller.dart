@@ -53,6 +53,7 @@ class ShiftPadController {
     await reloadSettings();
     _devices.statuses.addListener(_updateFallback);
     _updateFallback();
+    _queue = Future.value(); // created in the zone that runs the controller
     _sub = _devices.events.listen((e) {
       // Chained so sends stay in press order even when one is slow.
       _queue = _queue.then((_) => _handle(e));
