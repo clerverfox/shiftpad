@@ -42,6 +42,12 @@ void main() {
     expect(inj.calls, ['down A', 'up A']);
   });
 
+  test('toggleUi is U (checked in MyWhoosh)', () async {
+    final inj = FakeInjector();
+    await KeyboardOutput(injector: inj).send(GameAction.toggleUi, pressed: true);
+    expect(inj.calls, ['down U']);
+  });
+
   test('none action sends nothing', () async {
     final inj = FakeInjector();
     await KeyboardOutput(injector: inj).send(GameAction.none, pressed: true);

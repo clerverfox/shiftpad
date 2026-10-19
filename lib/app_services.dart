@@ -3,7 +3,9 @@ import 'dart:io';
 import 'ble/click_device_manager.dart';
 import 'ble/click_scanner.dart';
 import 'ble/universal_ble_link.dart';
+import 'core/click_button.dart';
 import 'diagnostics/app_log.dart';
+import 'mapping/keymap.dart';
 import 'mapping/settings_store.dart';
 import 'output/keyboard/key_injector.dart';
 import 'output/keyboard/keyboard_output.dart';
@@ -30,8 +32,10 @@ class AppServices {
 
   /// Real Bluetooth wiring for the running app.
   factory AppServices.create() {
-    final log = AppLog();
-    final devices = ClickDeviceManager(
+    // Keep-alive echoes alone add about 1 line/s: room for a long ride.
+    final log = AppLog(capacity: 50000);
+    late final ClickDeviceManager devices;
+    devices = ClickDeviceManager(
       scan: scanClicks,
       linkFactory: UniversalBleLink.new,
       sessionFactory: (link, side) => ClickSession(
@@ -39,6 +43,12 @@ class AppServices {
         side: side,
         onRawFrame: (bytes) => log.raw(side, bytes),
         onInfo: (m) => log.info(side.name, m),
+        // Windows drops a lone pod after ~60 s idle; a reboot brings it back
+        // in ~10 s. A connected pair stays up (checkpoints A and B).
+        idleRebootWhen: () {
+          final other = side == ClickSide.left ? ClickSide.right : ClickSide.left;
+          return devices.statuses.value[other]?.link != LinkState.ready;
+        },
       ),
       onInfo: (m) => log.info('ble', m),
     );
@@ -76,6 +86,12 @@ class AppServices {
     router.route.addListener(() => log.info('route', router.route.value.name));
     await router.start();
     await controller.start();
+    void updateWanted() => devices.wantedSides = {
+          ClickSide.right,
+          if (controller.mode.value == ControlMode.bothPods) ClickSide.left,
+        };
+    controller.mode.addListener(updateWanted);
+    updateWanted();
     await devices.start();
   }
 

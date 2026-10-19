@@ -56,3 +56,35 @@ MyWhoosh 6.2.3.0 (Microsoft Store build, `MyWhoosh.exe`, one visible window of c
 - A shift sent through OpenBikeControl changed gear in MyWhoosh. MyWhoosh does not have to be the foreground window.
 - When ShiftPad restarts, **MyWhoosh does not reconnect by itself**: no reconnect within 4 minutes, even with ShiftPad back on the same fixed port (47331, now the default). In the meantime the router falls back to the keyboard and shifting keeps working. The UI (Task 11) must tell the rider how to reconnect: Connection → OpenBikeControl → ShiftPad → Yes.
 - Dev note: stopping `flutter run` left the `shiftpad.exe` window running, and several stale instances had piled up (one of them was still holding port 47331). Some of the earlier keyboard results may have been affected. Before each run, kill every instance with `taskkill /IM shiftpad.exe /F`.
+
+## Checkpoint B: MyWhoosh on the same PC (2026-10-19)
+
+Release build, MyWhoosh 6.2.3 paired to the D500 over Bluetooth, virtual shifting on.
+Log: `shiftpad-logs-20261019-230656.txt` (in `Documents\ShiftPad`, not committed).
+
+### Step 1: OpenBikeControl and the wizard
+- The owner followed the wizard from first launch (22:36:08) to Finish (22:39:00): **2 min 52 s** (target: under 5 minutes). Mode chosen: right controller only.
+- MyWhoosh connected over OpenBikeControl and + / B shifted.
+- When ShiftPad was restarted cleanly (no stale instance left), **MyWhoosh reconnected by itself**, about 1 s after the mDNS registration. The earlier "no reconnect" (Task 9 note) was caused by stale `shiftpad.exe` instances still running.
+
+### Step 2: Keyboard
+- K shifts up and I shifts down (unchanged). **The toggle-UI key is U, not H.** `defaultKeys` is fixed and tested.
+- The owner disconnected OpenBikeControl in MyWhoosh: the route card switched to "Keyboard mode" and + still shifted.
+
+### Step 3: Latency
+- 178 presses in the ride log: from the BLE notification to the output sent, median 0 ms, max 1 ms (target: under 100 ms).
+
+### Step 4: Ride (stopped after 18 min, see below)
+The owner reported shifting that did not feel smooth, frequent disconnects, a pod card saying "Used by another app" when no other app was open, and one sudden jump from very easy to very hard without shifting.
+
+What the log shows:
+- The left pod was asleep the whole ride (right-only mode, never pressed), so the **right pod was connected alone**. A lone pod is dropped about 60 s after its last *button* frame. Keep-alive `RideOn` echoes do not count: the first drop came 61 s after connecting, and another 66 s after the last press. The pod was then unreachable (connect timeouts, "Unreachable") until the owner pressed a button. 24 disconnects in 18 min. Presses made while it was down were lost. In checkpoint A both pods were connected and nothing was dropped in 7 idle minutes.
+- "Used by another app" was wrong: every connect failure was reported as `busyElsewhere`.
+- Every shift sent had a matching press from the owner (no phantom shifts). The fast series of + (about 10 presses in 3 s at 22:56) was real presses right after a reconnect. The jump in resistance is not explained by ShiftPad output. A likely contributor: ShiftPad kept scanning for the missing left pod and retrying connections every 5 to 15 s, which loads the Bluetooth radio that the D500 also uses.
+
+Fixes (tested):
+- The idle reboot is back on. Its clock now follows button frames only, and it runs only when the pod is alone (`idleRebootWhen`). Hardware test, right pod alone and no presses for 3 minutes: a reboot every 55 s, the pod back in about 10 s each time, and the next + was delivered (5 ms). A press made during those ~10 s would still be lost.
+- A connect failure after the pod has answered once is shown as "Searching…" (asleep), not busy. "Used by another app" became "Can't connect", with a hint that covers both causes.
+- Scanning stops once the sides the mode needs are found. Right-only mode no longer scans for the left pod.
+
+Still to do: the one-hour ride with these fixes.

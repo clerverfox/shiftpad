@@ -36,8 +36,8 @@ void main() {
     expect(find.text('Battery 90%'), findsOneWidget);
 
     await show(const ClickStatus(side: ClickSide.right, link: LinkState.busyElsewhere));
-    expect(find.text('Used by another app'), findsOneWidget);
-    expect(find.textContaining('Close Zwift and Zwift Companion'), findsOneWidget);
+    expect(find.text("Can't connect"), findsOneWidget);
+    expect(find.textContaining('Zwift Companion open'), findsOneWidget);
 
     await show(const ClickStatus(
         side: ClickSide.left, link: LinkState.ready, lock: LockState.locked));

@@ -41,6 +41,9 @@ class FakeDevices implements ClickDeviceManager {
 
   @override
   Future<void> dispose() async {}
+
+  @override
+  set wantedSides(Set<ClickSide> sides) {}
 }
 
 void main() {

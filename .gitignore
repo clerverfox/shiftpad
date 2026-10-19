@@ -49,3 +49,6 @@ app.*.map.json
 
 # Release packages
 dist/
+
+# Exported ShiftPad logs (Documents\ShiftPad is this folder on the dev PC)
+shiftpad-logs-*.txt

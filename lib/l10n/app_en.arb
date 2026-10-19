@@ -34,8 +34,8 @@
 
   "podConnected": "Connected",
   "podSearching": "Searching…",
-  "podBusy": "Used by another app",
-  "podBusyHint": "Close Zwift and Zwift Companion, then wait a few seconds.",
+  "podBusy": "Can't connect",
+  "podBusyHint": "Is Zwift or Zwift Companion open? Close them, then press a button on the controller.",
   "podLocked": "Locked",
   "podLockedHint": "The left controller may stop. The right controller covers shifting.",
   "podProblem": "Problem — retrying",
@@ -108,7 +108,7 @@
   "actionEmote4": "Emote 4",
 
   "troubleTitle": "Troubleshooting",
-  "troubleBusyTitle": "A controller says \"Used by another app\"",
+  "troubleBusyTitle": "A controller says \"Can't connect\"",
   "troubleBusyBody": "A Click controller talks to one app at a time. Close Zwift and Zwift Companion (also on your phone). ShiftPad tries again every 5 seconds.",
   "troubleLockedTitle": "The left controller is locked or stopped",
   "troubleLockedBody": "ShiftPad switches to right-only buttons by itself: + shifts up, B shifts down. When the left controller answers again, its buttons come back.",

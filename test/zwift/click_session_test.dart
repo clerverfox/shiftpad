@@ -108,12 +108,47 @@ void main() {
         expect(link.writes.map(hex), contains('18'));
       }));
 
-  test('idle reboot is off by default (not needed on hardware)', () => fakeAsync((fa) {
+  test('keep-alive echoes do not hold off the idle reboot (checkpoint B)', () => fakeAsync((fa) {
         final link = FakeBleLink(services: [kClickService]);
         ClickSession(link: link, side: ClickSide.right).start();
+        fa.elapse(const Duration(milliseconds: 300));
+        for (var i = 0; i < 20; i++) {
+          link.push(kSyncTxChar, [0x52, 0x69, 0x64, 0x65, 0x4F, 0x6E]);
+          fa.elapse(const Duration(seconds: 3));
+        }
+        expect(link.writes.map(hex), contains('18'));
+      }));
+
+  test('idle reboot waits while its condition is false', () => fakeAsync((fa) {
+        final link = FakeBleLink(services: [kClickService]);
+        var alone = false;
+        ClickSession(link: link, side: ClickSide.right, idleRebootWhen: () => alone).start();
+        fa.elapse(const Duration(seconds: 120));
+        expect(link.writes.map(hex), isNot(contains('18')));
+        alone = true;
+        fa.elapse(const Duration(seconds: 56));
+        expect(link.writes.map(hex), contains('18'));
+      }));
+
+  test('idle reboot can be disabled', () => fakeAsync((fa) {
+        final link = FakeBleLink(services: [kClickService]);
+        ClickSession(link: link, side: ClickSide.right, idleRebootEnabled: false).start();
         fa.elapse(const Duration(seconds: 120));
         expect(link.writes.map(hex), isNot(contains('18')));
       }));
+
+  test('connect failure after the pod answered once -> disconnected, not busy',
+      () => fakeAsync((fa) {
+            final link = FakeBleLink(services: [kClickService]);
+            final s = startSession(fa, link);
+            link.push(kSyncTxChar, rideOnEcho);
+            link.dropConnection();
+            link.connectError = Exception('Unreachable');
+            s.start();
+            fa.flushMicrotasks();
+            expect(s.status.value.link, LinkState.disconnected);
+            expect(s.status.value.error, contains('Unreachable'));
+          }));
 
   test('connect throws -> busyElsewhere with error text, no throw', () => fakeAsync((fa) {
         final link = FakeBleLink(services: [kClickService], connectError: Exception('in use'));

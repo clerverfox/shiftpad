@@ -125,4 +125,19 @@ void main() {
         expect(links['r1']!.disconnectCount, 1);
         expect(links['r1']!.connectCount, 1);
       }));
+
+  test('right-only: scanning stops once the right pod is found', () => fakeAsync((fa) {
+        final m = makeManager()..wantedSides = {ClickSide.right};
+        m.start();
+        fa.flushMicrotasks();
+        expect(scan.hasListener, isTrue);
+        scan.add(found('r1', ClickSide.right));
+        fa.flushMicrotasks();
+        expect(scan.hasListener, isFalse);
+
+        m.wantedSides = ClickSide.values.toSet(); // switched to both pods
+        fa.flushMicrotasks();
+        expect(scan.hasListener, isTrue);
+        m.stop();
+      }));
 }

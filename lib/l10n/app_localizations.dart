@@ -265,13 +265,13 @@ abstract class AppLocalizations {
   /// No description provided for @podBusy.
   ///
   /// In en, this message translates to:
-  /// **'Used by another app'**
+  /// **'Can\'t connect'**
   String get podBusy;
 
   /// No description provided for @podBusyHint.
   ///
   /// In en, this message translates to:
-  /// **'Close Zwift and Zwift Companion, then wait a few seconds.'**
+  /// **'Is Zwift or Zwift Companion open? Close them, then press a button on the controller.'**
   String get podBusyHint;
 
   /// No description provided for @podLocked.
@@ -649,7 +649,7 @@ abstract class AppLocalizations {
   /// No description provided for @troubleBusyTitle.
   ///
   /// In en, this message translates to:
-  /// **'A controller says \"Used by another app\"'**
+  /// **'A controller says \"Can\'t connect\"'**
   String get troubleBusyTitle;
 
   /// No description provided for @troubleBusyBody.

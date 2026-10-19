@@ -69,7 +69,8 @@ class ClickSession {
     this._onInfo,
     this._keepAliveEvery = const Duration(seconds: 3),
     this._idleRebootAfter = const Duration(seconds: 55),
-    this._idleRebootEnabled = false,
+    this._idleRebootEnabled = true,
+    this._idleRebootWhen,
     this._connectTimeout = const Duration(seconds: 10),
     this._now = DateTime.now,
   }) : _status = ValueNotifier(ClickStatus(side: side));
@@ -80,6 +81,10 @@ class ClickSession {
   final Duration _keepAliveEvery;
   final Duration _idleRebootAfter;
   final bool _idleRebootEnabled;
+
+  /// Extra condition checked when the idle clock runs out, e.g. "the other
+  /// pod is not connected" (a connected pair does not get dropped).
+  final bool Function()? _idleRebootWhen;
   final Duration _connectTimeout;
   final DateTime Function() _now;
 
@@ -93,6 +98,11 @@ class ClickSession {
   Timer? _idle;
   String? _service;
   bool _running = false;
+
+  /// Whether this pod answered at least once since the app started. A pod
+  /// that never answered may be held by a Zwift app; one that did and now
+  /// fails to connect has most likely gone to sleep.
+  bool _everReady = false;
 
   BleLink get link => _link;
   Stream<ButtonEvent> get events => _events.stream;
@@ -114,7 +124,9 @@ class ClickSession {
       await _link.connect(timeout: _connectTimeout);
     } catch (e) {
       _running = false;
-      _s = _s.copyWith(link: LinkState.busyElsewhere, error: '$e');
+      _s = _s.copyWith(
+          link: _everReady ? LinkState.disconnected : LinkState.busyElsewhere,
+          error: '$e');
       _onInfo?.call('connect failed: $e');
       return;
     }
@@ -174,7 +186,6 @@ class ClickSession {
     final at = _now();
     _onRawFrame?.call(n.value);
     _s = _s.copyWith(lastFrameAt: at);
-    _resetIdleTimer();
 
     switch (parseClickFrame(n.value)) {
       case RideOnFrame():
@@ -185,6 +196,10 @@ class ClickSession {
       case LockChallengeFrame():
         _markReady(LockState.locked);
       case ButtonsFrame(:final pressed):
+        // Windows drops a lone pod ~60 s after its last button frame
+        // (keep-alive echoes do not count), so the idle clock follows
+        // button frames only.
+        _resetIdleTimer();
         // The left pod relays the right pod's buttons (checkpoint A), so each
         // session only reports its own side to avoid double shifts.
         final own = {
@@ -213,6 +228,7 @@ class ClickSession {
 
   void _markReady(LockState lock) {
     if (lock != _s.lock) _onInfo?.call('lock: ${lock.name}');
+    _everReady = true;
     _s = _s.copyWith(link: LinkState.ready, lock: lock, error: null);
     _keepAlive ??= Timer.periodic(_keepAliveEvery, (_) {
       unawaited(_write(kRideOn).catchError((_) {}));
@@ -239,6 +255,10 @@ class ClickSession {
     _idle?.cancel();
     if (!_idleRebootEnabled) return;
     _idle = Timer(_idleRebootAfter, () {
+      if (!(_idleRebootWhen?.call() ?? true)) {
+        _resetIdleTimer();
+        return;
+      }
       _onInfo?.call('idle ${_idleRebootAfter.inSeconds}s: reboot');
       unawaited(_write(kReboot).catchError((_) {}));
     });

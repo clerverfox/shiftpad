@@ -102,11 +102,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get podSearching => 'Searching…';
 
   @override
-  String get podBusy => 'Used by another app';
+  String get podBusy => 'Can\'t connect';
 
   @override
   String get podBusyHint =>
-      'Close Zwift and Zwift Companion, then wait a few seconds.';
+      'Is Zwift or Zwift Companion open? Close them, then press a button on the controller.';
 
   @override
   String get podLocked => 'Locked';
@@ -311,7 +311,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get troubleTitle => 'Troubleshooting';
 
   @override
-  String get troubleBusyTitle => 'A controller says \"Used by another app\"';
+  String get troubleBusyTitle => 'A controller says \"Can\'t connect\"';
 
   @override
   String get troubleBusyBody =>

@@ -14,13 +14,13 @@ class KeyboardOutput implements GameOutput {
     this._pollEvery = const Duration(seconds: 2),
   }) : keys = {...defaultKeys, ...?keys};
 
-  /// Windows virtual-key codes. Shift keys checked at checkpoint B.
+  /// Windows virtual-key codes, checked in MyWhoosh 6.2.3 at checkpoint B.
   static const defaultKeys = <GameAction, int>{
     GameAction.shiftUp: 0x4B, // K
     GameAction.shiftDown: 0x49, // I
     GameAction.steerLeft: 0x41, // A
     GameAction.steerRight: 0x44, // D
-    GameAction.toggleUi: 0x48, // H
+    GameAction.toggleUi: 0x55, // U (checkpoint B)
     GameAction.emote1: 0x31, // 1
     GameAction.emote2: 0x32, // 2
     GameAction.emote3: 0x33, // 3

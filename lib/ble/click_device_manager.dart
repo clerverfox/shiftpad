@@ -40,6 +40,25 @@ class ClickDeviceManager {
   final _failures = <ClickSide, int>{};
   StreamSubscription<DiscoveredClick>? _scanSub;
   bool _running = false;
+  Set<ClickSide> _wanted = ClickSide.values.toSet();
+
+  /// Sides worth scanning for. Scanning stops once these are found, since a
+  /// running scan weighs on the Bluetooth links (pods and trainer alike).
+  set wantedSides(Set<ClickSide> sides) {
+    _wanted = sides;
+    if (_wanted.every(_sessions.containsKey)) {
+      _stopScan();
+    } else {
+      _startScanIfNeeded();
+    }
+  }
+
+  void _stopScan() {
+    if (_scanSub == null) return;
+    _onInfo?.call('scan stopped');
+    unawaited(_scanSub!.cancel());
+    _scanSub = null;
+  }
 
   Stream<ButtonEvent> get events => _events.stream;
   ValueListenable<Map<ClickSide, ClickStatus>> get statuses => _statuses;
@@ -73,7 +92,7 @@ class ClickDeviceManager {
 
   void _startScanIfNeeded() {
     if (!_running || _scanSub != null) return;
-    if (ClickSide.values.every(_sessions.containsKey)) return;
+    if (_wanted.every(_sessions.containsKey)) return;
     _onInfo?.call('scanning');
     _scanSub = _scan().listen(_onDiscovered, onError: (Object e) {
       _onInfo?.call('scan error: $e');
@@ -92,10 +111,7 @@ class ClickDeviceManager {
     _onStatus(d.side, session.status.value);
     unawaited(session.start());
 
-    if (ClickSide.values.every(_sessions.containsKey)) {
-      unawaited(_scanSub?.cancel());
-      _scanSub = null;
-    }
+    if (_wanted.every(_sessions.containsKey)) _stopScan();
   }
 
   void _onStatus(ClickSide side, ClickStatus status) {

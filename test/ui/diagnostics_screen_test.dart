@@ -53,11 +53,12 @@ void main() {
     h.log.info('app', 'start');
     await tester.pumpWidget(wrap(DiagnosticsScreen(services: h.services)));
 
-    await tester.runAsync(() async {
-      await tester.tap(find.text('Export logs'));
-      await Future<void>.delayed(const Duration(milliseconds: 200));
-    });
-    await tester.pump();
+    await tester.tap(find.text('Export logs'));
+    // The file write is real I/O: give it real time, up to 5 s.
+    for (var i = 0; i < 50 && find.textContaining('Logs saved to').evaluate().isEmpty; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+      await tester.pump();
+    }
 
     expect(find.textContaining('Logs saved to'), findsOneWidget);
     expect(Directory('${tmp.path}/ShiftPad').listSync(), hasLength(1));
