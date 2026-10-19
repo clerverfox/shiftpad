@@ -30,6 +30,8 @@ class AppServices {
 
   Future<void> start() async {
     log.info('app', 'start');
+    devices.events.listen((e) => log.info(
+        'button', '${e.button.name} ${e.pressed ? 'down' : 'up'}'));
     await devices.start();
   }
 

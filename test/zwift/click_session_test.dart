@@ -108,9 +108,9 @@ void main() {
         expect(link.writes.map(hex), contains('18'));
       }));
 
-  test('idle reboot can be disabled', () => fakeAsync((fa) {
+  test('idle reboot is off by default (not needed on hardware)', () => fakeAsync((fa) {
         final link = FakeBleLink(services: [kClickService]);
-        startSession(fa, link, idleReboot: false);
+        ClickSession(link: link, side: ClickSide.right).start();
         fa.elapse(const Duration(seconds: 120));
         expect(link.writes.map(hex), isNot(contains('18')));
       }));
@@ -142,7 +142,7 @@ void main() {
 
   test('connection lost -> disconnected, held button released, timers stop', () => fakeAsync((fa) {
         final link = FakeBleLink(services: [kClickService]);
-        final s = startSession(fa, link);
+        final s = startSession(fa, link, side: ClickSide.left);
         link.push(kSyncTxChar, rideOnEcho);
         final events = <ButtonEvent>[];
         s.events.listen(events.add);
@@ -177,5 +177,44 @@ void main() {
         final s = startSession(fa, link);
         expect(s.status.value.batteryPercent, 87);
         expect(s.status.value.firmware, '1.2.0');
+      }));
+
+  test('left pod relays right buttons: each session keeps only its own side',
+      () => fakeAsync((fa) {
+            final link = FakeBleLink(services: [kClickService]);
+            final s = startSession(fa, link, side: ClickSide.left);
+            final events = <ButtonEvent>[];
+            s.events.listen(events.add);
+            link.push(kAsyncChar, pressedFrame(0x10)); // A, relayed from right
+            link.push(kAsyncChar, pressedFrame(0));
+            link.push(kAsyncChar, pressedFrame(0x100)); // minus, own
+            expect(events.map((e) => (e.button, e.pressed)), [(ClickButton.minus, true)]);
+          }));
+
+  test('keep-alive echo after a challenge does not clear locked', () => fakeAsync((fa) {
+        final link = FakeBleLink(services: [kClickService]);
+        final s = startSession(fa, link, side: ClickSide.left);
+        link.push(kSyncTxChar, rideOnEcho);
+        link.push(kSyncTxChar, [0xFF, 0x03, 0x00, 0x0a]);
+        link.push(kSyncTxChar, [0x52, 0x69, 0x64, 0x65, 0x4F, 0x6E]);
+        expect(s.status.value.lock, LockState.locked);
+      }));
+
+  test('own button press after a challenge proves the pod works', () => fakeAsync((fa) {
+        final link = FakeBleLink(services: [kClickService]);
+        final s = startSession(fa, link, side: ClickSide.left);
+        final events = <ButtonEvent>[];
+        s.events.listen(events.add);
+        link.push(kSyncTxChar, [0xFF, 0x03, 0x00, 0x0a]);
+        link.push(kAsyncChar, pressedFrame(0x100));
+        expect(events.single.button, ClickButton.minus);
+        expect(s.status.value.lock, LockState.unlocked);
+      }));
+
+  test('battery and firmware from pod frames', () => fakeAsync((fa) {
+        final link = FakeBleLink(services: [kClickService]);
+        final s = startSession(fa, link);
+        link.push(kAsyncChar, [0x19, 0x10, 0x5a]);
+        expect(s.status.value.batteryPercent, 90);
       }));
 }

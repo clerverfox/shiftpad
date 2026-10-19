@@ -69,7 +69,7 @@ class ClickSession {
     this._onInfo,
     this._keepAliveEvery = const Duration(seconds: 3),
     this._idleRebootAfter = const Duration(seconds: 55),
-    this._idleRebootEnabled = true,
+    this._idleRebootEnabled = false,
     this._connectTimeout = const Duration(seconds: 10),
     this._now = DateTime.now,
   }) : _status = ValueNotifier(ClickStatus(side: side));
@@ -178,14 +178,33 @@ class ClickSession {
 
     switch (parseClickFrame(n.value)) {
       case RideOnFrame():
-        _markReady(LockState.unlocked);
+        // Keep-alive echoes also arrive after a challenge: they do not prove
+        // an unlock, so they only settle an unknown state.
+        _markReady(_s.lock == LockState.unknown ? LockState.unlocked : _s.lock);
         unawaited(_write(kKeepUnlocked).catchError((_) {}));
       case LockChallengeFrame():
         _markReady(LockState.locked);
       case ButtonsFrame(:final pressed):
-        if (_s.link == LinkState.handshaking) _markReady(_s.lock);
-        for (final e in _differ.update(pressed, at)) {
+        // The left pod relays the right pod's buttons (checkpoint A), so each
+        // session only reports its own side to avoid double shifts.
+        final own = {
+          for (final b in pressed)
+            if (b.side == _s.side) b,
+        };
+        final events = _differ.update(own, at);
+        // A pod that still sends its own presses is usable, challenge or not.
+        final lock = events.isNotEmpty ? LockState.unlocked : _s.lock;
+        if (_s.link != LinkState.ready || lock != _s.lock) _markReady(lock);
+        for (final e in events) {
           _events.add(e);
+        }
+      case BatteryFrame(:final percent):
+        if (percent != _s.batteryPercent) {
+          _s = _s.copyWith(batteryPercent: percent);
+        }
+      case DeviceInfoFrame(:final firmware):
+        if (firmware != null && firmware != _s.firmware) {
+          _s = _s.copyWith(firmware: firmware);
         }
       case UnknownFrame():
         break;

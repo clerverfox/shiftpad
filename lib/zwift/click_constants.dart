@@ -24,4 +24,6 @@ final Uint8List kKeepUnlocked = Uint8List.fromList([0xFF, 0x04, 0x00]);
 final Uint8List kReboot = Uint8List.fromList([0x18]);
 
 const int kOpButtons = 0x23;
+const int kOpBattery = 0x19;
+const int kOpDeviceInfo = 0x3C;
 const int kOpLockChallenge = 0xFF;
