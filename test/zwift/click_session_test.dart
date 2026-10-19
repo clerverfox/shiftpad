@@ -79,7 +79,7 @@ void main() {
   test('raw frames are reported as hex', () => fakeAsync((fa) {
         final link = FakeBleLink(services: [kClickService]);
         final raw = <String>[];
-        ClickSession(link: link, side: ClickSide.right, onRawFrame: raw.add).start();
+        ClickSession(link: link, side: ClickSide.right, onRawFrame: (b) => raw.add(hex(b))).start();
         fa.elapse(const Duration(milliseconds: 300));
         link.push(kAsyncChar, [0x23, 0x08, 0x01]);
         expect(raw, ['230801']);

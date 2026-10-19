@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'app_services.dart';
 import 'l10n/app_localizations.dart';
+import 'ui/diagnostics_screen.dart';
 
 class ShiftPadApp extends StatelessWidget {
-  const ShiftPadApp({super.key});
+  const ShiftPadApp({super.key, required this.services});
+
+  final AppServices services;
 
   @override
   Widget build(BuildContext context) {
@@ -12,20 +16,7 @@ class ShiftPadApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(colorSchemeSeed: Colors.teal, useMaterial3: true),
-      home: const _PlaceholderHome(),
-    );
-  }
-}
-
-class _PlaceholderHome extends StatelessWidget {
-  const _PlaceholderHome();
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.appTitle)),
-      body: Center(child: Text(l10n.homePlaceholder)),
+      home: DiagnosticsScreen(services: services),
     );
   }
 }

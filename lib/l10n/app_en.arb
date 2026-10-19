@@ -1,5 +1,19 @@
 {
   "@@locale": "en",
   "appTitle": "ShiftPad",
-  "homePlaceholder": "Getting ready…"
+  "diagnosticsTitle": "Diagnostics",
+  "exportLogs": "Export logs",
+  "logsSaved": "Logs saved to {path}",
+  "@logsSaved": { "placeholders": { "path": { "type": "String" } } },
+  "logsSaveFailed": "Could not save logs: {error}",
+  "@logsSaveFailed": { "placeholders": { "error": { "type": "String" } } },
+  "leftPod": "Left controller",
+  "rightPod": "Right controller",
+  "notAvailable": "—",
+  "diagLink": "Link",
+  "diagLock": "Lock",
+  "diagBattery": "Battery",
+  "diagFirmware": "Firmware",
+  "diagLastFrame": "Last frame",
+  "diagError": "Error"
 }

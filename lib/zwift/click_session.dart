@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 
 import '../ble/ble_link.dart';
 import '../core/click_button.dart';
-import '../core/hex.dart';
 import 'button_differ.dart';
 import 'click_constants.dart';
 import 'click_frame.dart';
@@ -76,7 +75,7 @@ class ClickSession {
   }) : _status = ValueNotifier(ClickStatus(side: side));
 
   final BleLink _link;
-  final void Function(String hex)? _onRawFrame;
+  final void Function(Uint8List bytes)? _onRawFrame;
   final void Function(String message)? _onInfo;
   final Duration _keepAliveEvery;
   final Duration _idleRebootAfter;
@@ -173,7 +172,7 @@ class ClickSession {
 
   void _onNotification(BleNotification n) {
     final at = _now();
-    _onRawFrame?.call(hex(n.value));
+    _onRawFrame?.call(n.value);
     _s = _s.copyWith(lastFrameAt: at);
     _resetIdleTimer();
 

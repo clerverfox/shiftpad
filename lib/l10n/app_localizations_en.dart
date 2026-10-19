@@ -13,5 +13,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'ShiftPad';
 
   @override
-  String get homePlaceholder => 'Getting ready…';
+  String get diagnosticsTitle => 'Diagnostics';
+
+  @override
+  String get exportLogs => 'Export logs';
+
+  @override
+  String logsSaved(String path) {
+    return 'Logs saved to $path';
+  }
+
+  @override
+  String logsSaveFailed(String error) {
+    return 'Could not save logs: $error';
+  }
+
+  @override
+  String get leftPod => 'Left controller';
+
+  @override
+  String get rightPod => 'Right controller';
+
+  @override
+  String get notAvailable => '—';
+
+  @override
+  String get diagLink => 'Link';
+
+  @override
+  String get diagLock => 'Lock';
+
+  @override
+  String get diagBattery => 'Battery';
+
+  @override
+  String get diagFirmware => 'Firmware';
+
+  @override
+  String get diagLastFrame => 'Last frame';
+
+  @override
+  String get diagError => 'Error';
 }

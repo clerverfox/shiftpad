@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
+import 'app_services.dart';
 
 void main() {
-  runApp(const ShiftPadApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  final services = AppServices.create();
+  services.start();
+  runApp(ShiftPadApp(services: services));
 }

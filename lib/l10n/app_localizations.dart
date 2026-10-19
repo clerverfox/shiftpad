@@ -100,11 +100,83 @@ abstract class AppLocalizations {
   /// **'ShiftPad'**
   String get appTitle;
 
-  /// No description provided for @homePlaceholder.
+  /// No description provided for @diagnosticsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Getting ready…'**
-  String get homePlaceholder;
+  /// **'Diagnostics'**
+  String get diagnosticsTitle;
+
+  /// No description provided for @exportLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Export logs'**
+  String get exportLogs;
+
+  /// No description provided for @logsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Logs saved to {path}'**
+  String logsSaved(String path);
+
+  /// No description provided for @logsSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save logs: {error}'**
+  String logsSaveFailed(String error);
+
+  /// No description provided for @leftPod.
+  ///
+  /// In en, this message translates to:
+  /// **'Left controller'**
+  String get leftPod;
+
+  /// No description provided for @rightPod.
+  ///
+  /// In en, this message translates to:
+  /// **'Right controller'**
+  String get rightPod;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'—'**
+  String get notAvailable;
+
+  /// No description provided for @diagLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Link'**
+  String get diagLink;
+
+  /// No description provided for @diagLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock'**
+  String get diagLock;
+
+  /// No description provided for @diagBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery'**
+  String get diagBattery;
+
+  /// No description provided for @diagFirmware.
+  ///
+  /// In en, this message translates to:
+  /// **'Firmware'**
+  String get diagFirmware;
+
+  /// No description provided for @diagLastFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'Last frame'**
+  String get diagLastFrame;
+
+  /// No description provided for @diagError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get diagError;
 }
 
 class _AppLocalizationsDelegate
