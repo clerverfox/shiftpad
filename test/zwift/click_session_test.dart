@@ -123,6 +123,8 @@ void main() {
         final link = FakeBleLink(services: [kClickService]);
         var alone = false;
         ClickSession(link: link, side: ClickSide.right, idleRebootWhen: () => alone).start();
+        fa.elapse(const Duration(milliseconds: 300));
+        link.push(kSyncTxChar, rideOnEcho);
         fa.elapse(const Duration(seconds: 120));
         expect(link.writes.map(hex), isNot(contains('18')));
         alone = true;
@@ -251,5 +253,22 @@ void main() {
         final s = startSession(fa, link);
         link.push(kAsyncChar, [0x19, 0x10, 0x5a]);
         expect(s.status.value.batteryPercent, 90);
+      }));
+
+  test('silent pod after handshake -> busyElsewhere, disconnected (review)', () => fakeAsync((fa) {
+        final link = FakeBleLink(services: [kClickService]);
+        final s = startSession(fa, link);
+        fa.elapse(const Duration(seconds: 6));
+        expect(s.status.value.link, LinkState.busyElsewhere);
+        expect(link.disconnectCount, 1);
+      }));
+
+  test('frames after a disconnect are ignored (review)', () => fakeAsync((fa) {
+        final link = FakeBleLink(services: [kClickService]);
+        final s = startSession(fa, link);
+        link.push(kSyncTxChar, rideOnEcho);
+        link.dropConnection();
+        link.push(kSyncTxChar, rideOnEcho);
+        expect(s.status.value.link, LinkState.disconnected);
       }));
 }

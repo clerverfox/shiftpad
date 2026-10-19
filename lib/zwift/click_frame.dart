@@ -56,7 +56,9 @@ ClickFrame parseClickFrame(Uint8List bytes) {
   if (bytes[0] == kOpBattery) {
     final fields = _readFields(bytes, 1);
     final percent = fields?[2];
-    if (percent is int && percent <= 100) return BatteryFrame(percent);
+    if (percent is int && percent >= 0 && percent <= 100) {
+      return BatteryFrame(percent);
+    }
     return UnknownFrame(bytes);
   }
   if (bytes[0] == kOpDeviceInfo) {
@@ -105,7 +107,7 @@ Map<int, Object>? _readFields(Uint8List bytes, int offset) {
         out[field] = v.$1;
       case 2:
         final len = varint();
-        if (len == null || i + len.$1 > bytes.length) return null;
+        if (len == null || len.$1 < 0 || len.$1 > bytes.length - i) return null;
         out[field] = Uint8List.sublistView(bytes, i, i + len.$1);
         i += len.$1;
       default:

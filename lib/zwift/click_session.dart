@@ -71,6 +71,7 @@ class ClickSession {
     this._idleRebootAfter = const Duration(seconds: 55),
     this._idleRebootEnabled = true,
     this._idleRebootWhen,
+    this._handshakeTimeout = const Duration(seconds: 5),
     this._connectTimeout = const Duration(seconds: 10),
     this._now = DateTime.now,
   }) : _status = ValueNotifier(ClickStatus(side: side));
@@ -85,6 +86,8 @@ class ClickSession {
   /// Extra condition checked when the idle clock runs out, e.g. "the other
   /// pod is not connected" (a connected pair does not get dropped).
   final bool Function()? _idleRebootWhen;
+  final Duration _handshakeTimeout;
+  Timer? _handshakeTimer;
   final Duration _connectTimeout;
   final DateTime Function() _now;
 
@@ -153,6 +156,18 @@ class ClickSession {
       await _write(kActivate1);
       await Future<void>.delayed(const Duration(milliseconds: 100));
       await _write(kActivate2);
+      // Connected but silent (e.g. another app holds the pod): give up and
+      // let the manager retry instead of waiting forever.
+      _handshakeTimer = Timer(_handshakeTimeout, () {
+        if (!_running || _s.link != LinkState.handshaking) return;
+        _onInfo?.call('no answer to the handshake');
+        _running = false;
+        _stopTimers();
+        _s = _s.copyWith(
+            link: _everReady ? LinkState.error : LinkState.busyElsewhere,
+            error: 'No answer from the controller');
+        unawaited(_link.disconnect().catchError((_) {}));
+      });
       unawaited(_readInfo(services));
     } catch (e) {
       _onInfo?.call('setup failed: $e');
@@ -183,6 +198,8 @@ class ClickSession {
   }
 
   void _onNotification(BleNotification n) {
+    // Frames queued before a disconnect can arrive after it.
+    if (!_running) return;
     final at = _now();
     _onRawFrame?.call(n.value);
     _s = _s.copyWith(lastFrameAt: at);
@@ -265,6 +282,8 @@ class ClickSession {
   }
 
   void _stopTimers() {
+    _handshakeTimer?.cancel();
+    _handshakeTimer = null;
     _keepAlive?.cancel();
     _keepAlive = null;
     _idle?.cancel();

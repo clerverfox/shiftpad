@@ -82,11 +82,20 @@ class WindowsDnsSdAdvertiser implements MdnsAdvertiser {
     if (request == null) return;
     final done = (_pending = Completer<int>()).future;
     final result = DnsServiceDeRegister(request, null).value;
+    var status = 0;
     if (result == DNS_REQUEST_PENDING) {
-      await done.timeout(const Duration(seconds: 5), onTimeout: () => -1);
+      status = await done.timeout(const Duration(seconds: 5), onTimeout: () => -1);
     }
     _pending = null;
     _onInfo?.call('mDNS unregister: $result');
+    if (status == -1) {
+      // Windows may still use the request and callback: leak them rather
+      // than free memory it could touch later.
+      _callback = null;
+      _request = null;
+      _arena = null;
+      return;
+    }
     _release();
   }
 

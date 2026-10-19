@@ -97,4 +97,12 @@ void main() {
       expect(() => parseClickFrame(bytesOf(f)), returnsNormally);
     }
   });
+
+  test('huge or negative lengths never throw (review)', () {
+    final ff9 = List.filled(9, 'ff').join(' ');
+    for (final f in ['3c 12 $ff9 01 00', '19 12 $ff9 01', '19 10 $ff9 01']) {
+      expect(() => parseClickFrame(bytesOf(f)), returnsNormally, reason: f);
+      expect(parseClickFrame(bytesOf(f)), isNot(isA<BatteryFrame>()), reason: f);
+    }
+  });
 }

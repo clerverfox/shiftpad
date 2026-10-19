@@ -88,3 +88,17 @@ Fixes (tested):
 - Scanning stops once the sides the mode needs are found. Right-only mode no longer scans for the left pod.
 
 Still to do: the one-hour ride with these fixes.
+
+## Whole-branch review (2026-10-20)
+
+Fixed:
+- The frame parser could throw on a huge or negative length varint, and accepted a negative battery value.
+- A pod that connects but never answers the handshake now gives up after 5 s and is retried (shown as "Can't connect" if it never answered before).
+- One failing send no longer blocks every later shift.
+- Frames that arrive after a disconnect are ignored.
+- mDNS unregister no longer frees memory that Windows might still use when it times out.
+
+Not fixed (low; check during the one-hour ride):
+- The left pod relays right-pod frames. While a left button is held, a relayed right frame reads as "left released", so a held ← or − may be released early.
+- In both-pods mode, a pod that sleeps for the whole ride is retried every 5 s, forever.
+- The 5 s handshake timeout is not yet checked on hardware (the echo arrived about 0.1 s after the handshake in every log so far).
