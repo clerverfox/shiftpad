@@ -54,4 +54,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diagError => 'Error';
+
+  @override
+  String get myWhooshFound => 'MyWhoosh window found';
+
+  @override
+  String get myWhooshNotFound => 'MyWhoosh window not found';
+
+  @override
+  String get sendShiftUp => 'Send shift up in 3 s';
+
+  @override
+  String get sendShiftDown => 'Send shift down in 3 s';
 }

@@ -15,5 +15,9 @@
   "diagBattery": "Battery",
   "diagFirmware": "Firmware",
   "diagLastFrame": "Last frame",
-  "diagError": "Error"
+  "diagError": "Error",
+  "myWhooshFound": "MyWhoosh window found",
+  "myWhooshNotFound": "MyWhoosh window not found",
+  "sendShiftUp": "Send shift up in 3 s",
+  "sendShiftDown": "Send shift down in 3 s"
 }

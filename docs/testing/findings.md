@@ -37,3 +37,13 @@ Logs (in `Documents\ShiftPad` on the bike PC, not committed because they contain
 Neither (a) nor (b) from the plan applies: **the left pod works without being unlocked by a Zwift app.** Wizard copy: "Both controllers work with ShiftPad. If the left one stops answering, ShiftPad switches to right-only buttons by itself." No Companion steps.
 
 Controller rule (Task 10), adjusted to this finding: a challenge alone must **not** drop left-pod events. When the left pod is not usable (not connected, or a challenge was received and no own press came after it), the right pod also gets the right-only bindings (B = shift down) as a backup. Left presses that do arrive are still used.
+
+## Task 8 manual check: keyboard into MyWhoosh (2026-10-19)
+
+MyWhoosh 6.2.3.0 (Microsoft Store build, `MyWhoosh.exe`, one visible window of class `UnrealWindow`), during a free ride with virtual shifting on.
+
+- Typed by hand: **K = shift up, I = shift down.** This matches `KeyboardOutput.defaultKeys`.
+- `SendInput` with scan codes works. A probe sent K three ways (scan code only with a 60 ms hold, scan code only with a 250 ms hold, VK + scan code with a 250 ms hold): all three shifted.
+- Bug found: the first version checked `GetForegroundWindow()` right after `SetForegroundWindow()`. Activation is asynchronous, so the key-down was sometimes dropped. Fixed: wait up to 500 ms for the activation, then 200 ms more before the first key.
+- After the fix, 4 out of 4 "Send shift up" tests shifted: 3 with MyWhoosh already in front, 1 where ShiftPad brought it to the front.
+- The MyWhoosh process has a hidden "Bonjour Hidden Window". MyWhoosh seems to ship its own Bonjour (mDNS) client, which matters for Task 9.

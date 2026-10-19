@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app_services.dart';
 import '../core/click_button.dart';
+import '../core/game_action.dart';
 import '../diagnostics/app_log.dart';
 import '../l10n/app_localizations.dart';
 import '../zwift/click_session.dart';
@@ -42,6 +43,7 @@ class DiagnosticsScreen extends StatelessWidget {
               ),
             ),
           ),
+          _KeyboardTestRow(services: services),
           const Divider(height: 1),
           Expanded(child: _LogView(log: services.log)),
         ],
@@ -98,6 +100,51 @@ class _PodDiagnosticsCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Debug buttons to check key injection into MyWhoosh by hand.
+class _KeyboardTestRow extends StatelessWidget {
+  const _KeyboardTestRow({required this.services});
+
+  final AppServices services;
+
+  Future<void> _tap(GameAction action) async {
+    final keyboard = services.keyboard;
+    // Gives time to click into MyWhoosh, like during a real ride.
+    await Future<void>.delayed(const Duration(seconds: 3));
+    await keyboard.send(action, pressed: true);
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+    await keyboard.send(action, pressed: false);
+    services.log.info('keyboard', 'test ${action.name}');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          ValueListenableBuilder(
+            valueListenable: services.keyboard.available,
+            builder: (context, found, _) =>
+                Text(found ? l10n.myWhooshFound : l10n.myWhooshNotFound),
+          ),
+          OutlinedButton(
+            onPressed: () => _tap(GameAction.shiftUp),
+            child: Text(l10n.sendShiftUp),
+          ),
+          OutlinedButton(
+            onPressed: () => _tap(GameAction.shiftDown),
+            child: Text(l10n.sendShiftDown),
+          ),
+        ],
       ),
     );
   }

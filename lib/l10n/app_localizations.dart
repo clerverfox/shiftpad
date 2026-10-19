@@ -177,6 +177,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error'**
   String get diagError;
+
+  /// No description provided for @myWhooshFound.
+  ///
+  /// In en, this message translates to:
+  /// **'MyWhoosh window found'**
+  String get myWhooshFound;
+
+  /// No description provided for @myWhooshNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'MyWhoosh window not found'**
+  String get myWhooshNotFound;
+
+  /// No description provided for @sendShiftUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Send shift up in 3 s'**
+  String get sendShiftUp;
+
+  /// No description provided for @sendShiftDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Send shift down in 3 s'**
+  String get sendShiftDown;
 }
 
 class _AppLocalizationsDelegate
