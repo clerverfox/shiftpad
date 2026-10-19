@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 
@@ -65,24 +64,16 @@ class ClickStatus {
 /// Talks to one Click V2 pod: handshake, button frames, keep-alive.
 class ClickSession {
   ClickSession({
-    required BleLink link,
+    required this._link,
     required ClickSide side,
-    void Function(String hex)? onRawFrame,
-    void Function(String message)? onInfo,
-    Duration keepAliveEvery = const Duration(seconds: 3),
-    Duration idleRebootAfter = const Duration(seconds: 55),
-    bool idleRebootEnabled = true,
-    Duration connectTimeout = const Duration(seconds: 10),
-    DateTime Function() now = DateTime.now,
-  })  : _link = link,
-        _onRawFrame = onRawFrame,
-        _onInfo = onInfo,
-        _keepAliveEvery = keepAliveEvery,
-        _idleRebootAfter = idleRebootAfter,
-        _idleRebootEnabled = idleRebootEnabled,
-        _connectTimeout = connectTimeout,
-        _now = now,
-        _status = ValueNotifier(ClickStatus(side: side));
+    this._onRawFrame,
+    this._onInfo,
+    this._keepAliveEvery = const Duration(seconds: 3),
+    this._idleRebootAfter = const Duration(seconds: 55),
+    this._idleRebootEnabled = true,
+    this._connectTimeout = const Duration(seconds: 10),
+    this._now = DateTime.now,
+  }) : _status = ValueNotifier(ClickStatus(side: side));
 
   final BleLink _link;
   final void Function(String hex)? _onRawFrame;
@@ -211,7 +202,7 @@ class ClickSession {
   }
 
   void _onConnectionLost() {
-    if (_s.link == LinkState.disconnected) return;
+    if (!_running) return;
     _onInfo?.call('connection lost');
     _running = false;
     _stopTimers();
