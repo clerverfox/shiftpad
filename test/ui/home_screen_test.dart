@@ -22,7 +22,7 @@ void main() {
     // No MyWhoosh in tests: keyboard injector unsupported, no OBC client.
     expect(find.text('MyWhoosh not found'), findsOneWidget);
     // Both-pods mode with the left pod not connected.
-    expect(find.text('Left controller locked — using right-only buttons'), findsOneWidget);
+    expect(find.text('Left controller not ready — B also shifts down'), findsOneWidget);
     expect(find.text('Press a button to try it.'), findsOneWidget);
   });
 
@@ -41,7 +41,7 @@ void main() {
 
     await show(const ClickStatus(
         side: ClickSide.left, link: LinkState.ready, lock: LockState.locked));
-    expect(find.text('Locked'), findsOneWidget);
+    expect(find.text('Connected — not confirmed'), findsOneWidget);
 
     await show(const ClickStatus(side: ClickSide.left, link: LinkState.connecting));
     expect(find.text('Searching…'), findsOneWidget);

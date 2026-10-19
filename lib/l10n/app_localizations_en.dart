@@ -109,11 +109,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Is Zwift or Zwift Companion open? Close them, then press a button on the controller.';
 
   @override
-  String get podLocked => 'Locked';
+  String get podLocked => 'Connected — not confirmed';
 
   @override
   String get podLockedHint =>
-      'The left controller may stop. The right controller covers shifting.';
+      'Press any button on this controller once to confirm it works. Until then, B also shifts down.';
 
   @override
   String get podProblem => 'Problem — retrying';
@@ -150,8 +150,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routeNoneHint => 'Start MyWhoosh on this PC.';
 
   @override
-  String get fallbackBanner =>
-      'Left controller locked — using right-only buttons';
+  String get fallbackBanner => 'Left controller not ready — B also shifts down';
 
   @override
   String lastPressed(String action, int ms) {

@@ -37,7 +37,7 @@ class PodStatusCard extends StatelessWidget {
       PodDisplay.connected => (Icons.check_circle, Colors.green.shade600, l10n.podConnected, null),
       PodDisplay.searching => (Icons.bluetooth_searching, scheme.primary, l10n.podSearching, l10n.podSearchingHint),
       PodDisplay.busy => (Icons.block, scheme.error, l10n.podBusy, l10n.podBusyHint),
-      PodDisplay.locked => (Icons.lock, Colors.orange.shade700, l10n.podLocked, l10n.podLockedHint),
+      PodDisplay.locked => (Icons.touch_app, Colors.orange.shade700, l10n.podLocked, l10n.podLockedHint),
       PodDisplay.problem => (Icons.error_outline, scheme.error, l10n.podProblem, null),
       PodDisplay.notUsed => (Icons.remove_circle_outline, scheme.outline, l10n.podNotUsed, null),
     };

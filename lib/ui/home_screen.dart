@@ -62,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                 ? Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: MaterialBanner(
-                      leading: const Icon(Icons.lock),
+                      leading: const Icon(Icons.info_outline),
                       content: Text(l10n.fallbackBanner),
                       actions: const [SizedBox.shrink()],
                     ),

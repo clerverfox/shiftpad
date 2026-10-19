@@ -277,13 +277,13 @@ abstract class AppLocalizations {
   /// No description provided for @podLocked.
   ///
   /// In en, this message translates to:
-  /// **'Locked'**
+  /// **'Connected — not confirmed'**
   String get podLocked;
 
   /// No description provided for @podLockedHint.
   ///
   /// In en, this message translates to:
-  /// **'The left controller may stop. The right controller covers shifting.'**
+  /// **'Press any button on this controller once to confirm it works. Until then, B also shifts down.'**
   String get podLockedHint;
 
   /// No description provided for @podProblem.
@@ -349,7 +349,7 @@ abstract class AppLocalizations {
   /// No description provided for @fallbackBanner.
   ///
   /// In en, this message translates to:
-  /// **'Left controller locked — using right-only buttons'**
+  /// **'Left controller not ready — B also shifts down'**
   String get fallbackBanner;
 
   /// No description provided for @lastPressed.
