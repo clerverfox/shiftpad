@@ -43,6 +43,7 @@ class DiagnosticsScreen extends StatelessWidget {
               ),
             ),
           ),
+          _OutputRow(services: services),
           _KeyboardTestRow(services: services),
           const Divider(height: 1),
           Expanded(child: _LogView(log: services.log)),
@@ -100,6 +101,41 @@ class _PodDiagnosticsCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Current output route and the last action with its latency.
+class _OutputRow extends StatelessWidget {
+  const _OutputRow({required this.services});
+
+  final AppServices services;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: ListenableBuilder(
+        listenable: Listenable.merge([
+          services.router.route,
+          services.controller.lastAction,
+          services.controller.fallbackToRightOnly,
+          services.obc.connectedAppName,
+        ]),
+        builder: (context, _) {
+          final last = services.controller.lastAction.value;
+          return Wrap(spacing: 24, runSpacing: 4, children: [
+            Text(l10n.diagRoute(services.router.route.value.name,
+                services.obc.connectedAppName.value ?? l10n.notAvailable)),
+            Text(last == null
+                ? l10n.diagNoAction
+                : l10n.diagLastAction(last.$1.name, last.$2.inMilliseconds)),
+            if (services.controller.fallbackToRightOnly.value)
+              Text(l10n.diagFallback),
+          ]);
+        },
       ),
     );
   }

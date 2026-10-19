@@ -27,7 +27,7 @@ void main() {
     expect(find.text('Battery: —'), findsNWidgets(2));
 
     await tester.runAsync(() async {
-      await h.services.start();
+      await h.devices.start();
       h.scan.add(const DiscoveredClick(
           deviceId: 'r1', side: ClickSide.right, name: 'Click'));
       await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -43,7 +43,7 @@ void main() {
     await tester.pump(); // rebuild
     expect(find.textContaining('[test] hello from the log'), findsOneWidget);
 
-    await tester.runAsync(h.services.stop);
+    await tester.runAsync(h.devices.stop);
   });
 
   testWidgets('Export logs saves a file and shows its path', (tester) async {

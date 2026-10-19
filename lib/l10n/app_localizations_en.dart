@@ -56,6 +56,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get diagError => 'Error';
 
   @override
+  String diagRoute(String route, String app) {
+    return 'Output: $route (app: $app)';
+  }
+
+  @override
+  String get diagNoAction => 'No action yet';
+
+  @override
+  String diagLastAction(String action, int ms) {
+    return 'Last action: $action, $ms ms';
+  }
+
+  @override
+  String get diagFallback => 'Right-only fallback on';
+
+  @override
   String get myWhooshFound => 'MyWhoosh window found';
 
   @override

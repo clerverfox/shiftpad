@@ -178,6 +178,30 @@ abstract class AppLocalizations {
   /// **'Error'**
   String get diagError;
 
+  /// No description provided for @diagRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Output: {route} (app: {app})'**
+  String diagRoute(String route, String app);
+
+  /// No description provided for @diagNoAction.
+  ///
+  /// In en, this message translates to:
+  /// **'No action yet'**
+  String get diagNoAction;
+
+  /// No description provided for @diagLastAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Last action: {action}, {ms} ms'**
+  String diagLastAction(String action, int ms);
+
+  /// No description provided for @diagFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Right-only fallback on'**
+  String get diagFallback;
+
   /// No description provided for @myWhooshFound.
   ///
   /// In en, this message translates to:

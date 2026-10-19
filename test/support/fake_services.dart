@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shiftpad/app_services.dart';
 import 'package:shiftpad/ble/click_device_manager.dart';
 import 'package:shiftpad/ble/click_scanner.dart';
 import 'package:shiftpad/diagnostics/app_log.dart';
+import 'package:shiftpad/mapping/settings_store.dart';
 import 'package:shiftpad/output/keyboard/key_injector.dart';
 import 'package:shiftpad/output/keyboard/keyboard_output.dart';
 import 'package:shiftpad/output/obc/mdns_advertiser.dart';
@@ -15,7 +17,8 @@ import 'fake_ble_link.dart';
 
 /// AppServices backed by fake BLE; push discoveries through [scan].
 class FakeServicesHarness {
-  FakeServicesHarness({Directory? documentsDir}) {
+  FakeServicesHarness({Directory? documentsDir, Map<String, Object>? prefs}) {
+    SharedPreferences.setMockInitialValues(prefs ?? {});
     log = AppLog(
         documentsDir: () async => documentsDir ?? Directory.systemTemp);
     devices = ClickDeviceManager(
@@ -30,7 +33,11 @@ class FakeServicesHarness {
         bindAddress: InternetAddress.loopbackIPv4,
         port: 0);
     services = AppServices(
-        devices: devices, log: log, keyboard: keyboard, obc: obc);
+        devices: devices,
+        log: log,
+        keyboard: keyboard,
+        obc: obc,
+        settings: SettingsStore());
   }
 
   final scan = StreamController<DiscoveredClick>.broadcast();
