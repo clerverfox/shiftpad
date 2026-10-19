@@ -7,6 +7,8 @@ import 'package:shiftpad/ble/click_scanner.dart';
 import 'package:shiftpad/diagnostics/app_log.dart';
 import 'package:shiftpad/output/keyboard/key_injector.dart';
 import 'package:shiftpad/output/keyboard/keyboard_output.dart';
+import 'package:shiftpad/output/obc/mdns_advertiser.dart';
+import 'package:shiftpad/output/obc/obc_output.dart';
 import 'package:shiftpad/zwift/click_constants.dart';
 
 import 'fake_ble_link.dart';
@@ -22,7 +24,13 @@ class FakeServicesHarness {
           links[id] ??= FakeBleLink(deviceId: id, services: [kClickService]),
     );
     keyboard = KeyboardOutput(injector: const UnsupportedKeyInjector());
-    services = AppServices(devices: devices, log: log, keyboard: keyboard);
+    obc = ObcOutput(
+        advertiser: const NoopMdnsAdvertiser(),
+        log: log,
+        bindAddress: InternetAddress.loopbackIPv4,
+        port: 0);
+    services = AppServices(
+        devices: devices, log: log, keyboard: keyboard, obc: obc);
   }
 
   final scan = StreamController<DiscoveredClick>.broadcast();
@@ -30,5 +38,6 @@ class FakeServicesHarness {
   late final AppLog log;
   late final ClickDeviceManager devices;
   late final KeyboardOutput keyboard;
+  late final ObcOutput obc;
   late final AppServices services;
 }

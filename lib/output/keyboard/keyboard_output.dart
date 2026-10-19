@@ -59,6 +59,10 @@ class KeyboardOutput implements GameOutput {
   }
 
   @override
+  bool supports(GameAction action) =>
+      action != GameAction.none && keys.containsKey(action);
+
+  @override
   Future<void> send(GameAction action, {required bool pressed}) async {
     final key = keys[action];
     if (action == GameAction.none || key == null) return;

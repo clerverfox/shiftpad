@@ -47,3 +47,12 @@ MyWhoosh 6.2.3.0 (Microsoft Store build, `MyWhoosh.exe`, one visible window of c
 - Bug found: the first version checked `GetForegroundWindow()` right after `SetForegroundWindow()`. Activation is asynchronous, so the key-down was sometimes dropped. Fixed: wait up to 500 ms for the activation, then 200 ms more before the first key.
 - After the fix, 4 out of 4 "Send shift up" tests shifted: 3 with MyWhoosh already in front, 1 where ShiftPad brought it to the front.
 - The MyWhoosh process has a hidden "Bonjour Hidden Window". MyWhoosh seems to ship its own Bonjour (mDNS) client, which matters for Task 9.
+
+## Task 9 manual check: OpenBikeControl on the same PC (2026-10-19)
+
+- `WindowsDnsSdAdvertiser` (`DnsServiceRegister`) registers `ShiftPad-DELL-JD._openbikecontrol._tcp.local.` with status 0. `python -I tool/mdns_browse.py` sees it, with host `DELL-JD.local.`, the right port and all the TXT keys. Caveat: the Bonjour service is also installed on this PC, so "works without Bonjour" is shown for the Windows API, not proven on a PC without Bonjour.
+- No Windows Firewall prompt appeared. MyWhoosh on the same PC connects through the PC's LAN address (`192.168.1.139`), which the firewall does not block.
+- **MyWhoosh 6.2.3 lists ShiftPad under Connection → OpenBikeControl and connects on the first try.** App info received: `mywhoosh 5.7.0`, buttons `0x01, 0x02, 0x03, 0x10–0x19, 0x40`. So MyWhoosh handles shifting, steering and navigation, but not HUD toggle (`0x44`) or emote (`0x20`). Those go to the keyboard: `ObcOutput.supports()` now honours the list the app sends.
+- A shift sent through OpenBikeControl changed gear in MyWhoosh. MyWhoosh does not have to be the foreground window.
+- When ShiftPad restarts, **MyWhoosh does not reconnect by itself**: no reconnect within 4 minutes, even with ShiftPad back on the same fixed port (47331, now the default). In the meantime the router falls back to the keyboard and shifting keeps working. The UI (Task 11) must tell the rider how to reconnect: Connection → OpenBikeControl → ShiftPad → Yes.
+- Dev note: stopping `flutter run` left the `shiftpad.exe` window running, and several stale instances had piled up (one of them was still holding port 47331). Some of the earlier keyboard results may have been affected. Before each run, kill every instance with `taskkill /IM shiftpad.exe /F`.

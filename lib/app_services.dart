@@ -7,6 +7,10 @@ import 'diagnostics/app_log.dart';
 import 'output/keyboard/key_injector.dart';
 import 'output/keyboard/keyboard_output.dart';
 import 'output/keyboard/win32_key_injector.dart';
+import 'output/obc/mdns_advertiser.dart';
+import 'output/obc/obc_output.dart';
+import 'output/obc/windows_dnssd_advertiser.dart';
+import 'output/output_router.dart';
 import 'zwift/click_session.dart';
 
 /// Everything the UI needs, wired together once at startup.
@@ -15,7 +19,8 @@ class AppServices {
     required this.devices,
     required this.log,
     required this.keyboard,
-  });
+    required this.obc,
+  }) : router = OutputRouter(obc: obc, keyboard: keyboard);
 
   /// Real Bluetooth wiring for the running app.
   factory AppServices.create() {
@@ -36,23 +41,32 @@ class AppServices {
           ? Win32KeyInjector(onInfo: (m) => log.info('keyboard', m))
           : const UnsupportedKeyInjector(),
     );
-    return AppServices(devices: devices, log: log, keyboard: keyboard);
+    final obc = ObcOutput(
+      advertiser: Platform.isWindows
+          ? WindowsDnsSdAdvertiser(onInfo: (m) => log.info('obc', m))
+          : const NoopMdnsAdvertiser(),
+      log: log,
+    );
+    return AppServices(devices: devices, log: log, keyboard: keyboard, obc: obc);
   }
 
   final ClickDeviceManager devices;
   final AppLog log;
   final KeyboardOutput keyboard;
+  final ObcOutput obc;
+  final OutputRouter router;
 
   Future<void> start() async {
     log.info('app', 'start');
     devices.events.listen((e) => log.info(
         'button', '${e.button.name} ${e.pressed ? 'down' : 'up'}'));
-    await keyboard.start();
+    router.route.addListener(() => log.info('route', router.route.value.name));
+    await router.start();
     await devices.start();
   }
 
   Future<void> stop() async {
     await devices.stop();
-    await keyboard.stop();
+    await router.stop();
   }
 }

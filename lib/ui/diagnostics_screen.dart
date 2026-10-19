@@ -112,13 +112,13 @@ class _KeyboardTestRow extends StatelessWidget {
   final AppServices services;
 
   Future<void> _tap(GameAction action) async {
-    final keyboard = services.keyboard;
+    final router = services.router;
     // Gives time to click into MyWhoosh, like during a real ride.
     await Future<void>.delayed(const Duration(seconds: 3));
-    await keyboard.send(action, pressed: true);
+    final route = await router.send(action, pressed: true);
     await Future<void>.delayed(const Duration(milliseconds: 60));
-    await keyboard.send(action, pressed: false);
-    services.log.info('keyboard', 'test ${action.name}');
+    await router.send(action, pressed: false);
+    services.log.info('test', '${action.name} via ${route.name}');
   }
 
   @override
