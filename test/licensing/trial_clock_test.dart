@@ -62,7 +62,7 @@ void main() {
 
   test('registry store round-trip (Windows)', () async {
     final key = r'Software\ShiftPadTest';
-    addTearDown(() => Process.run('reg', ['delete', r'HKCU' + key, '/f']));
+    addTearDown(() => Process.run('reg', ['delete', 'HKCU\$key', '/f']));
     final r = RegistryTrialStore(key);
     expect(await r.firstStart(), isNull);
     await r.setFirstStart(day0);
