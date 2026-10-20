@@ -102,3 +102,15 @@ Not fixed (low; check during the one-hour ride):
 - The left pod relays right-pod frames. While a left button is held, a relayed right frame reads as "left released", so a held ← or − may be released early.
 - In both-pods mode, a pod that sleeps for the whole ride is retried every 5 s, forever.
 - The 5 s handshake timeout is not yet checked on hardware (the echo arrived about 0.1 s after the handshake in every log so far).
+
+## Ride, 2026-10-20 (16:57 to 17:22, both pods)
+
+Log: `shiftpad-logs-20261020-172231.txt` (in `Documents\ShiftPad`, not committed). Release build with the review fixes; MyWhoosh over OpenBikeControl, which reconnected by itself.
+
+- **No disconnects in 25 minutes**, both pods connected. The owner: "pendant la séance niquel" (smooth throughout the session).
+- 67 presses (35 +, 30 −, 2 arrows). From notification to output: median 0 ms, p95 1 ms. One 215 ms send went through keyboard mode before OpenBikeControl had connected (window focus delay).
+- Each ← / − hold that happened went through without an early release.
+- The left pod sent a second challenge at 17:11:53 (about 14 minutes in). It stayed connected (status, battery and `RideOn` frames kept coming), but the card showed "not confirmed", which the owner read as "disconnected". No − press came after it (the owner did not need one), so this ride does not show whether − still worked.
+- Fix: a challenge on a connection that has already carried one of the pod's own presses no longer marks the pod locked. Basis: in checkpoint A, presses kept arriving after challenges.
+
+Still open: a full one-hour ride, and a check that − works after a mid-ride challenge.

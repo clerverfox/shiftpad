@@ -107,6 +107,9 @@ class ClickSession {
   /// fails to connect has most likely gone to sleep.
   bool _everReady = false;
 
+  /// Whether a button of this pod's side was seen since the last connect.
+  bool _pressedThisConnection = false;
+
   BleLink get link => _link;
   Stream<ButtonEvent> get events => _events.stream;
   ValueListenable<ClickStatus> get status => _status;
@@ -147,6 +150,7 @@ class ClickSession {
       if (_service == null) {
         throw StateError('Click service not found (got $services)');
       }
+      _pressedThisConnection = false;
       _s = _s.copyWith(link: LinkState.handshaking);
       await _link.subscribe(_service!, kAsyncChar, indicate: false);
       await _link.subscribe(_service!, kSyncTxChar, indicate: true);
@@ -211,7 +215,15 @@ class ClickSession {
         _markReady(_s.lock == LockState.unknown ? LockState.unlocked : _s.lock);
         unawaited(_write(kKeepUnlocked).catchError((_) {}));
       case LockChallengeFrame():
-        _markReady(LockState.locked);
+        // Pods send challenges again mid-ride and keep working (checkpoint A,
+        // ride of 2026-10-20). Once this connection has carried a real press,
+        // a challenge alone does not mark the pod locked.
+        if (_pressedThisConnection) {
+          _onInfo?.call('challenge ignored: pod already proved it works');
+          _markReady(_s.lock);
+        } else {
+          _markReady(LockState.locked);
+        }
       case ButtonsFrame(:final pressed):
         // Windows drops a lone pod ~60 s after its last button frame
         // (keep-alive echoes do not count), so the idle clock follows
@@ -224,6 +236,7 @@ class ClickSession {
             if (b.side == _s.side) b,
         };
         final events = _differ.update(own, at);
+        if (events.isNotEmpty) _pressedThisConnection = true;
         // A pod that still sends its own presses is usable, challenge or not.
         final lock = events.isNotEmpty ? LockState.unlocked : _s.lock;
         if (_s.link != LinkState.ready || lock != _s.lock) _markReady(lock);

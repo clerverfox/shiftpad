@@ -271,4 +271,16 @@ void main() {
         link.push(kSyncTxChar, rideOnEcho);
         expect(s.status.value.link, LinkState.disconnected);
       }));
+
+  test('a challenge after a real press keeps the pod usable (ride 2026-10-20)',
+      () => fakeAsync((fa) {
+            final link = FakeBleLink(services: [kClickService]);
+            final s = startSession(fa, link, side: ClickSide.left);
+            link.push(kSyncTxChar, rideOnEcho);
+            link.push(kAsyncChar, pressedFrame(0x100));
+            link.push(kAsyncChar, pressedFrame(0));
+            link.push(kSyncTxChar, [0xFF, 0x03, 0x00, 0x0a]);
+            expect(s.status.value.lock, LockState.unlocked);
+            expect(s.status.value.usable, isTrue);
+          }));
 }
