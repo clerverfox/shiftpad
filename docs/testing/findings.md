@@ -114,3 +114,12 @@ Log: `shiftpad-logs-20261020-172231.txt` (in `Documents\ShiftPad`, not committed
 - Fix: a challenge on a connection that has already carried one of the pod's own presses no longer marks the pod locked. Basis: in checkpoint A, presses kept arriving after challenges.
 
 Still open: a full one-hour ride, and a check that − works after a mid-ride challenge.
+
+## One-hour ride, 2026-10-20 (17:31 to 18:30, both pods)
+
+Log: `shiftpad-logs-20261020-183040.txt` (in `Documents\ShiftPad`, not committed). Latest build, including "ignore challenges once a pod has proven itself".
+
+- **Pass: 59 minutes, 0 disconnects, no lost or doubled press reported by the owner.** MyWhoosh reconnected over OpenBikeControl by itself, 1 s after ShiftPad started.
+- 88 presses (44 +, 43 −, 1 ↑); 174 of 176 actions went over OpenBikeControl. From notification to output: median 0 ms, p95 1 ms. Max 217 ms: ↑ = emote, which MyWhoosh does not take over OpenBikeControl, so it went by keyboard and waited for the window to come to the front.
+- The left pod sends a challenge about every 17 minutes (17:33, 17:50, 18:07, 18:24). **− kept working after each one**: 43 − presses, 42 of them after the first mid-ride challenge. Mid-ride challenges are harmless once the pod has worked, and ShiftPad now ignores them.
+- Success criteria (spec §6): one-hour ride without lost presses or unrecovered disconnects ✓, latency well under 100 ms ✓, wizard in under 5 minutes ✓ (2 min 52 s, checkpoint B).
